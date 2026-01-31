@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Scan QR Hotspot</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 10px 0;
+    }
+
+    #reader {
+      width: 100vw;
+      height: 75vh;
+      margin: auto;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #ff9800;
+      color: black;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>SCAN QR HOTSPOT</h2>
+<div id="reader"></div>
+<button id="flashBtn">🔦 Flash ON</button>
+
+<script>
+  const html5QrCode = new Html5Qrcode("reader");
+  let flashOn = false;
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    {
+      fps: 10,
+      qrbox: { width: 300, height: 300 }
+    },
+    (decodedText) => {
+      window.location.href = decodedText;
+    }
+  ).then(() => {
+    const btn = document.getElementById("flashBtn");
+
+    btn.onclick = () => {
+      flashOn = !flashOn;
+      html5QrCode.applyVideoConstraints({
+        advanced: [{ torch: flashOn }]
+      });
+      btn.innerText = flashOn ? "🔦 Flash OFF" : "🔦 Flash ON";
+    };
+  });
+</script>
+
+</body>
+</html>
